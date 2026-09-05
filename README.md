@@ -1,78 +1,77 @@
-# React + TypeScript + Vite
+# Supremacía Clásica: Universitario vs Alianza Lima
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Un dashboard analítico e interactivo que rastrea y visualiza la historia completa del clásico del fútbol peruano (Universitario de Deportes vs Alianza Lima), extrayendo datos en tiempo real desde los registros históricos de [RSSSF](https://www.rsssf.org/tablesa/aliuni.html).
 
-Currently, two official plugins are available:
+## Características Principales
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+* **Filtros por Competición:** Capacidad de analizar estadísticas separando partidos oficiales, amistosos, o filtrando por torneos específicos (Copa Libertadores, Torneo Apertura, etc.).
+* **Manejo de W.O. (Walkover):** Detección inteligente de partidos ganados en mesa, reflejados correctamente en las tablas y estadísticas acumuladas.
+* **Métricas Avanzadas Anuales:** Gráficos de distribución de victorias anuales que incluyen la diferencia de goles exacta por año y quién tuvo la mejor cuota goleadora.
+* **Evolución Histórica:** Un gráfico de área que traza la diferencia neta acumulada de victorias a lo largo de la historia.
+* **Explorador de Partidos:** Una tabla interactiva con paginación y búsqueda rápida para explorar cada clásico jugado desde 1928.
+* **Consolidado por Torneo:** Una vista sumaria que agrupa los partidos y resultados según el torneo disputado.
+* **Actualización en Tiempo Real:** Extracción y parseo de datos de RSSSF al vuelo usando funciones Serverless con caché inteligente para minimizar la carga.
 
-## React Compiler
+## Stack Tecnológico
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+**Frontend:**
+* **React 19** con **TypeScript**
+* **Vite** como entorno de desarrollo ultrarrápido
+* **Tailwind CSS v4** para el sistema de diseño visual (UI oscura y glassmorphism)
+* **Recharts** para visualización de datos dinámica
+* **Lucide React** para iconografía ligera
 
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+**Backend / API:**
+* **Vercel Serverless Functions** (Node.js) para la ingesta y transformación de datos (`/api/matches`)
+* Middlewares de Vite para simular el comportamiento del backend localmente.
 
-## Expanding the ESLint configuration
+## Arquitectura del Proyecto
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```text
+supremacia-clasica/
++-- api/
+   +-- matches.ts              # Vercel Serverless Endpoint (Parseo de RSSSF)
++-- src/
+   +-- assets/                 # Recursos gráficos (Logos de los equipos)
+   +-- components/             # Componentes compartidos (Header, etc.)
+   +-- features/classic/       # Feature-driven architecture para el dashboard
+      +-- components/         # Tablas, Gráficos y KPIs
+      +-- hooks/              # Lógica de negocio (useClassicStats)
+      +-- services/           # Interacción con la API local/remota y Caché
+      +-- types/              # Interfaces TypeScript
+      +-- utils/              # Funciones puras de parseo (parser.ts)
+   +-- App.tsx                 # Punto de entrada y ensamblaje de la UI
+   +-- index.css               # Estilos globales y tokens
++-- vite.config.ts              # Configuración de Vite y middleware de desarrollo
++-- vercel.json                 # Configuración de despliegue
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+## Instalación y Uso Local
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Sigue estos pasos para levantar el entorno de desarrollo localmente:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. **Clonar el repositorio:**
+   ```bash
+   git clone https://github.com/jmlc643/supremacia-clasica.git
+   ```
 
-```
+2. **Ingresar al directorio:**
+   ```bash
+   cd supremacia-clasica
+   ```
+
+3. **Instalar dependencias:**
+   ```bash
+   npm install
+   ```
+
+4. **Iniciar el servidor de desarrollo:**
+   ```bash
+   npm run dev
+   ```
+   *La aplicación estará disponible en `http://localhost:5173` y el backend simulado en `http://localhost:5173/api/matches`.*
+
+## Licencia
+
+Este proyecto es de uso libre y educativo, basado en los datos públicos de [The Rec.Sport.Soccer Statistics Foundation (RSSSF)](https://www.rsssf.org).
+
