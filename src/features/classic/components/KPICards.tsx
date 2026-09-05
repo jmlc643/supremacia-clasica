@@ -1,4 +1,6 @@
 import type { ClassicStats } from '../types';
+import logoAlianza from '../../../assets/escudo_alianza_lima.webp';
+import logoU from '../../../assets/escudo_universitario.webp';
 
 interface KpiCardsProps {
   stats: ClassicStats;
@@ -8,10 +10,12 @@ export const KpiCards = ({ stats }: KpiCardsProps) => {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       <div className="bg-[#0b172e]/90 border border-blue-900/60 p-5 rounded-2xl shadow-lg relative overflow-hidden">
-        <div className="text-xs font-bold uppercase tracking-wider text-blue-400">Alianza Lima</div>
+        <div className="text-xs font-bold uppercase tracking-wider text-blue-400 flex items-center gap-2">
+          Alianza Lima
+        </div>
         <div className="text-3xl font-black text-blue-100 mt-1">{stats.totalAli}</div>
         <p className="text-xs text-slate-400 mt-1">{stats.totalGoalsAli} goles registrados</p>
-        <div className="absolute right-3 top-3 text-4xl font-black text-blue-900/20 select-none">AL</div>
+        <img src={logoAlianza} alt="" className="absolute right-[-10%] top-[-10%] w-24 h-24 opacity-15 pointer-events-none" />
       </div>
 
       <div className="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl shadow-lg">
@@ -21,10 +25,12 @@ export const KpiCards = ({ stats }: KpiCardsProps) => {
       </div>
 
       <div className="bg-[#210c11]/90 border border-amber-900/50 p-5 rounded-2xl shadow-lg relative overflow-hidden">
-        <div className="text-xs font-bold uppercase tracking-wider text-[#f4ebd0]">Universitario</div>
+        <div className="text-xs font-bold uppercase tracking-wider text-[#f4ebd0] flex items-center gap-2">
+          Universitario
+        </div>
         <div className="text-3xl font-black text-amber-100 mt-1">{stats.totalU}</div>
         <p className="text-xs text-slate-400 mt-1">{stats.totalGoalsU} goles registrados</p>
-        <div className="absolute right-3 top-3 text-4xl font-black text-amber-900/20 select-none">U</div>
+        <img src={logoU} alt="" className="absolute right-[-10%] top-[-10%] w-24 h-24 opacity-15 pointer-events-none" />
       </div>
 
       <div className="bg-slate-900/90 border border-amber-500/30 p-5 rounded-2xl shadow-lg">

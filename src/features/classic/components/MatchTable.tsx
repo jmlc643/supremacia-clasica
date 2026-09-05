@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import type { Match } from '../types';
+import logoAlianza from '../../../assets/escudo_alianza_lima.webp';
+import logoU from '../../../assets/escudo_universitario.webp';
 
 interface MatchTableProps {
   dataset: Match[];
@@ -57,7 +59,7 @@ export const MatchTable = ({ dataset }: MatchTableProps) => {
                 <td className="p-3 font-bold text-blue-400">{m.gAli}</td>
                 <td className="p-3">
                   <span
-                    className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                    className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold ${
                       m.winner === 'Universitario'
                         ? 'bg-amber-950 text-amber-200 border border-amber-800'
                         : m.winner === 'Alianza Lima'
@@ -65,6 +67,8 @@ export const MatchTable = ({ dataset }: MatchTableProps) => {
                         : 'bg-slate-800 text-slate-300 border border-slate-700'
                     }`}
                   >
+                    {m.winner === 'Universitario' && <img src={logoU} alt="U" className="w-3 h-3" />}
+                    {m.winner === 'Alianza Lima' && <img src={logoAlianza} alt="AL" className="w-3 h-3" />}
                     {m.winner}
                   </span>
                 </td>
