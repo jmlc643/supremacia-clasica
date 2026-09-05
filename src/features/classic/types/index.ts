@@ -4,7 +4,8 @@ export interface Match {
   num: number;
   date: string;
   year: number;
-  isFriendly: boolean;
+  competition: string;
+  isWalkover?: boolean;
   winner: MatchWinner;
   gU: number;
   gAli: number;
@@ -19,6 +20,19 @@ export interface YearStats {
   net_diff: number;
   cumU: number;
   cumAli: number;
+  gU_year: number;
+  gAli_year: number;
+  bestGoalDiffTeam: MatchWinner | 'Empate' | 'Ninguno';
+}
+
+export interface CompetitionStats {
+  name: string;
+  total: number;
+  totalU: number;
+  totalAli: number;
+  totalEmp: number;
+  totalGoalsU: number;
+  totalGoalsAli: number;
 }
 
 export interface ClassicStats {
@@ -33,4 +47,5 @@ export interface ClassicStats {
   yearsTied: number;
   timeline: YearStats[];
   dataset: Match[];
+  competitions: CompetitionStats[];
 }

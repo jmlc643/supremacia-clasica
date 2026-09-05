@@ -2,11 +2,12 @@ import logoAlianza from '../assets/escudo_alianza_lima.webp';
 import logoU from '../assets/escudo_universitario.webp';
 
 interface HeaderProps {
-  includeFriendlies: boolean;
-  onToggleFriendlies: (val: boolean) => void;
+  competitionFilter: string;
+  onFilterChange: (val: string) => void;
+  availableCompetitions: string[];
 }
 
-export const Header = ({ includeFriendlies, onToggleFriendlies }: HeaderProps) => {
+export const Header = ({ competitionFilter, onFilterChange, availableCompetitions }: HeaderProps) => {
   return (
     <header className="border-b border-slate-800 bg-[#060c18]/90 backdrop-blur sticky top-0 z-50 px-6 py-4">
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -22,19 +23,21 @@ export const Header = ({ includeFriendlies, onToggleFriendlies }: HeaderProps) =
         </div>
 
         <div className="flex items-center gap-3 bg-slate-900/90 border border-slate-700/80 px-3.5 py-1.5 rounded-xl">
-          <span className="text-xs font-medium text-slate-300">Incluir Amistosos</span>
-          <button
-            onClick={() => onToggleFriendlies(!includeFriendlies)}
-            className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors ${
-              includeFriendlies ? 'bg-amber-600' : 'bg-slate-700'
-            }`}
+          <span className="text-xs font-medium text-slate-300">Filtro:</span>
+          <select 
+            value={competitionFilter}
+            onChange={(e) => onFilterChange(e.target.value)}
+            className="bg-slate-800 border border-slate-600 text-xs text-slate-200 px-3 py-1.5 rounded-lg focus:outline-none focus:border-amber-500 min-w-[140px]"
           >
-            <div
-              className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${
-                includeFriendlies ? 'translate-x-5' : ''
-              }`}
-            />
-          </button>
+            <option value="All">Todas las competiciones</option>
+            <option value="Oficiales">Solo Oficiales</option>
+            <option value="Amistosos">Solo Amistosos</option>
+            <optgroup label="Específicas">
+              {availableCompetitions.map(comp => (
+                <option key={comp} value={comp}>{comp}</option>
+              ))}
+            </optgroup>
+          </select>
         </div>
       </div>
     </header>

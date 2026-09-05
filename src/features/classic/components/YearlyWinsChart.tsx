@@ -9,6 +9,47 @@ interface YearlyWinsChartProps {
 
 type FilterOption = 'all' | 'last10' | 'last20' | '2020s' | '2010s' | '2000s' | '1990s' | '1980s' | 'older';
 
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload as YearStats;
+    return (
+      <div className="bg-[#0b1120] border border-slate-700 p-3 rounded-xl shadow-xl text-xs min-w-[140px]">
+        <p className="font-bold text-slate-100 mb-2 border-b border-slate-700 pb-1 text-center">{label}</p>
+        
+        <div className="space-y-1">
+          {payload.map((entry: any) => (
+            <div key={entry.name} className="flex justify-between gap-4">
+              <span style={{ color: entry.color }} className="font-medium">{entry.name}:</span>
+              <span className="font-bold text-slate-200">{entry.value}</span>
+            </div>
+          ))}
+        </div>
+        
+        {(data.gU_year > 0 || data.gAli_year > 0) && (
+          <div className="mt-3 pt-2 border-t border-slate-800">
+            <p className="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Diferencia de Goles</p>
+            <div className="flex justify-between gap-4 text-xs font-semibold mb-1">
+              <span className="text-amber-400/80">U: {data.gU_year}</span>
+              <span className="text-blue-400/80">AL: {data.gAli_year}</span>
+            </div>
+            <div className="flex justify-between items-center text-[11px]">
+              <span className="text-slate-400">Mejor:</span>
+              <span className={`font-bold ${
+                data.bestGoalDiffTeam === 'Universitario' ? 'text-amber-400' :
+                data.bestGoalDiffTeam === 'Alianza Lima' ? 'text-blue-400' :
+                'text-slate-300'
+              }`}>
+                {data.bestGoalDiffTeam}
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+  return null;
+};
+
 export const YearlyWinsChart = ({ timeline }: YearlyWinsChartProps) => {
   const [filter, setFilter] = useState<FilterOption>('all');
 
@@ -77,7 +118,7 @@ export const YearlyWinsChart = ({ timeline }: YearlyWinsChartProps) => {
             <YAxis stroke="#64748b" fontSize={11} allowDecimals={false} />
             <Tooltip 
               cursor={{ fill: '#1e293b', opacity: 0.8 }}
-              contentStyle={{ backgroundColor: '#0b1120', borderColor: '#334155', borderRadius: '8px', fontSize: '12px' }} 
+              content={<CustomTooltip />}
             />
             <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
             <Bar dataKey="ali_wins" name="Alianza Lima" fill="#1d4ed8" radius={[2, 2, 0, 0]} />

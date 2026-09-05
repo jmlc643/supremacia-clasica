@@ -1,6 +1,6 @@
 import type { Match } from '../types';
 
-const CACHE_KEY = 'dataclasico_matches_cache';
+const CACHE_KEY = 'dataclasico_matches_cache_v3';
 
 export async function fetchClassicMatches(): Promise<Match[]> {
   const cached = localStorage.getItem(CACHE_KEY);

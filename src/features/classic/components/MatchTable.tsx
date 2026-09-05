@@ -55,8 +55,16 @@ export const MatchTable = ({ dataset }: MatchTableProps) => {
               <tr key={m.num} className="hover:bg-slate-800/40">
                 <td className="p-3 text-slate-500">{m.num}</td>
                 <td className="p-3 font-medium text-slate-200">{m.date}</td>
-                <td className="p-3 font-bold text-amber-300">{m.gU}</td>
-                <td className="p-3 font-bold text-blue-400">{m.gAli}</td>
+                <td className="p-3 font-bold text-amber-300">
+                  {m.isWalkover ? (
+                    m.winner === 'Universitario' ? 'W' : (m.winner === 'Alianza Lima' ? 'O' : '-')
+                  ) : m.gU}
+                </td>
+                <td className="p-3 font-bold text-blue-400">
+                  {m.isWalkover ? (
+                    m.winner === 'Alianza Lima' ? 'W' : (m.winner === 'Universitario' ? 'O' : '-')
+                  ) : m.gAli}
+                </td>
                 <td className="p-3">
                   <span
                     className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold ${
@@ -72,7 +80,7 @@ export const MatchTable = ({ dataset }: MatchTableProps) => {
                     {m.winner}
                   </span>
                 </td>
-                <td className="p-3 text-slate-500">{m.isFriendly ? 'Amistoso' : 'Oficial'}</td>
+                <td className="p-3 text-slate-500">{m.competition}</td>
               </tr>
             ))}
           </tbody>

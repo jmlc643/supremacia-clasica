@@ -8,7 +8,8 @@ interface MatchItem {
   num: number;
   date: string;
   year: number;
-  isFriendly: boolean;
+  competition: string;
+  isWalkover?: boolean;
   winner: MatchWinner;
   gU: number;
   gAli: number;
@@ -62,50 +63,93 @@ export default defineConfig({
               const dateStr = m[2];
               const year = parseInt(dateStr.split('/')[2], 10);
               const rest = m[3];
-              const isFriendly = /\bfriendly\b/i.test(rest);
 
               let winner: MatchWinner;
               let gU = 0;
               let gAli = 0;
 
+              let isWalkover = false;
+
               if ([7, 21, 352, 353].includes(num)) {
                 winner = 'Alianza Lima';
+                isWalkover = true;
               } else if (num === 128) {
                 winner = 'Universitario';
+                isWalkover = true;
               } else if (num === 207) {
                 winner = 'Empate';
+                isWalkover = true;
               } else {
                 const scoreMatch = rest.match(
                   /(Universitario|Alianza Lima)\s+(\d+)\s*-\s*(\d+)\s+(Universitario|Alianza Lima)/i
                 );
-                if (!scoreMatch) continue;
+                if (scoreMatch) {
+                  const homeTeam = scoreMatch[1];
+                  const homeGoals = parseInt(scoreMatch[2], 10);
+                  const awayGoals = parseInt(scoreMatch[3], 10);
 
-                const homeTeam = scoreMatch[1];
-                const homeGoals = parseInt(scoreMatch[2], 10);
-                const awayGoals = parseInt(scoreMatch[3], 10);
+                  if (/Universitario/i.test(homeTeam)) {
+                    gU = homeGoals;
+                    gAli = awayGoals;
+                  } else {
+                    gAli = homeGoals;
+                    gU = awayGoals;
+                  }
 
-                if (/Universitario/i.test(homeTeam)) {
-                  gU = homeGoals;
-                  gAli = awayGoals;
+                  if (gU > gAli) {
+                    winner = 'Universitario';
+                  } else if (gAli > gU) {
+                    winner = 'Alianza Lima';
+                  } else {
+                    winner = 'Empate';
+                  }
+                } else if (/wo/i.test(rest)) {
+                   isWalkover = true;
+                   if (/(Alianza Lima)\s+wo/i.test(rest)) winner = 'Alianza Lima';
+                   else if (/(Universitario)\s+wo/i.test(rest)) winner = 'Universitario';
+                   else winner = 'Empate';
                 } else {
-                  gAli = homeGoals;
-                  gU = awayGoals;
-                }
-
-                if (gU > gAli) {
-                  winner = 'Universitario';
-                } else if (gAli > gU) {
-                  winner = 'Alianza Lima';
-                } else {
-                  winner = 'Empate';
+                  continue;
                 }
               }
+
+              let competition = 'Desconocido';
+              const noScorers = rest.split('[')[0];
+              const scoreIndex = noScorers.search(/(?:\d+\s*-\s*\d+|wo)/i);
+              
+              if (/\bfriendly\b/i.test(rest)) {
+                competition = 'Amistoso';
+              } else if (scoreIndex !== -1) {
+                  let afterScore = noScorers.substring(scoreIndex).replace(/(?:\d+\s*-\s*\d+|wo)/i, '');
+                  afterScore = afterScore.replace(/(Universitario|Alianza Lima)/gi, '').trim();
+                  
+                  const inMatch = afterScore.match(/^in\s+[a-zA-ZáéíóúÁÉÍÓÚñÑ\-\s]+?(?:\s{2,}|\t+)(.+)$/i);
+                  if (inMatch) {
+                     competition = inMatch[1].trim();
+                  } else {
+                     const words = afterScore.split(/\s+/);
+                     if (words.length > 2 && words[0].toLowerCase() === 'in') {
+                        competition = words.slice(2).join(' ').trim();
+                     } else {
+                        competition = afterScore;
+                     }
+                  }
+               }
+                  
+              competition = competition.replace(/\uFFFD/g, 'ó');
+              competition = competition.replace(/<.*?/g, '');
+              competition = competition.replace(/-+\s*Don.*?played.*/i, '');
+              competition = competition.replace(/ó?Final/i, ' Final');
+              competition = competition.replace(/\s+/g, ' ').trim();
+
+              if (!competition) competition = 'Desconocido';
 
               matches.push({
                 num,
                 date: dateStr,
                 year,
-                isFriendly,
+                competition,
+                isWalkover,
                 winner,
                 gU,
                 gAli,

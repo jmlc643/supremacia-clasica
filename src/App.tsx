@@ -5,10 +5,11 @@ import { KpiCards } from './features/classic/components/KPICards';
 import { NetDifferenceChart } from './features/classic/components/NetDifferenceChart';
 import { YearlyWinsChart } from './features/classic/components/YearlyWinsChart';
 import { MatchTable } from './features/classic/components/MatchTable';
+import { CompetitionTable } from './features/classic/components/CompetitionTable';
 import { Database, ShieldAlert } from 'lucide-react';
 
 export default function App() {
-  const { stats, loading, error, includeFriendlies, setIncludeFriendlies } = useClassicStats();
+  const { stats, loading, error, competitionFilter, setCompetitionFilter, availableCompetitions } = useClassicStats();
 
   if (loading) {
     return (
@@ -32,8 +33,9 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#060e1d] via-[#081326] to-[#120709] text-slate-100 flex flex-col justify-between font-sans">
       <Header
-        includeFriendlies={includeFriendlies}
-        onToggleFriendlies={setIncludeFriendlies}
+        competitionFilter={competitionFilter}
+        onFilterChange={setCompetitionFilter}
+        availableCompetitions={availableCompetitions}
       />
 
       <main className="max-w-7xl mx-auto px-6 py-8 w-full space-y-8">
@@ -42,6 +44,7 @@ export default function App() {
           <NetDifferenceChart timeline={stats.timeline} />
           <YearlyWinsChart timeline={stats.timeline} />
         </div>
+        <CompetitionTable competitions={stats.competitions} />
         <MatchTable dataset={stats.dataset} />
       </main>
 

@@ -1,7 +1,7 @@
-import { ComponentProps } from 'react';
+import type { ComponentProps } from 'react';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import { History } from 'lucide-react';
-import { YearStats } from '../types';
+import type { YearStats } from '../types';
 
 interface NetDifferenceChartProps {
   timeline: YearStats[];
